@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BugReport Analyzer</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BugReport Analyzer</h1>
+            <div class="actions">
+                <button id="open-project-btn">Open Project</button>
+                <button id="new-project-btn">New Project</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="project-list" id="project-list">
+                <h2>Recent Projects</h2>
+                <ul id="recent-projects"></ul>
+            </div>
+
+            <div class="project-view hidden" id="project-view">
+                <div class="project-header">
+                    <h2 id="project-name"></h2>
+                    <button id="back-to-list">Back to Projects</button>
+                </div>
+
+                <div class="project-content">
+                    <div class="files-section">
+                        <h3>BugReport Files</h3>
+                        <div class="chunk-list" id="chunk-list"></div>
+                    </div>
+
+                    <div class="text-viewer">
+                        <div class="text-controls">
+                            <input type="text" id="search-input" placeholder="Search...">
+                            <button id="search-btn">Search</button>
+                            <label>
+                                <input type="checkbox" id="use-regex"> Use Regex
+                            </label>
+                        </div>
+                        <div class="text-content" id="text-content"></div>
+                    </div>
+
+                    <div class="video-section">
+                        <h3>Video Files</h3>
+                        <div class="video-list" id="video-list"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="src/renderer/renderer.js"></script>
+</body>
+</html>
