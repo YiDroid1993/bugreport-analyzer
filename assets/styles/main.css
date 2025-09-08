@@ -59,13 +59,13 @@ h1 {
     background-color: white;
     border-radius: 4px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 #recent-projects li:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .hidden {
@@ -94,25 +94,29 @@ h1 {
     gap: 20px;
 }
 
-.files-section, .video-section {
+.files-section,
+.video-section {
     background-color: white;
     padding: 20px;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.files-section h3, .video-section h3 {
+.files-section h3,
+.video-section h3 {
     margin-bottom: 15px;
     color: #34495e;
 }
 
-.chunk-list, .video-list {
+.chunk-list,
+.video-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.chunk-list button, .video-list button {
+.chunk-list button,
+.video-list button {
     padding: 10px;
     background-color: #ecf0f1;
     border: 1px solid #bdc3c7;
@@ -121,7 +125,8 @@ h1 {
     text-align: left;
 }
 
-.chunk-list button:hover, .video-list button:hover {
+.chunk-list button:hover,
+.video-list button:hover {
     background-color: #dde4e6;
 }
 
@@ -129,7 +134,7 @@ h1 {
     background-color: white;
     padding: 20px;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .text-controls {
@@ -173,4 +178,131 @@ h1 {
 mark {
     background-color: #ffeb3b;
     padding: 2px 0;
+}
+
+/* 在main.css中添加以下样式 */
+
+.project-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.project-path {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+.upload-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#upload-btn {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#upload-btn:hover {
+    background-color: #2980b9;
+}
+
+.status-info {
+    color: #3498db;
+    margin-top: 10px;
+}
+
+.status-success {
+    color: #27ae60;
+    margin-top: 10px;
+}
+
+.status-error {
+    color: #e74c3c;
+    margin-top: 10px;
+}
+
+#uploaded-files-list {
+    list-style-type: none;
+}
+
+#uploaded-files-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.file-name {
+    flex: 1;
+    font-weight: bold;
+}
+
+.file-size {
+    margin: 0 10px;
+    color: #7f8c8d;
+}
+
+.file-action {
+    padding: 5px 10px;
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.file-action:hover {
+    background-color: #dde4e6;
+}
+
+.recent-projects li {
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.recent-projects li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.project-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.project-path {
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-last-opened {
+    font-size: 12px;
+    color: #95a5a6;
+}
+
+.empty {
+    text-align: center;
+    color: #95a5a6;
+    font-style: italic;
 }

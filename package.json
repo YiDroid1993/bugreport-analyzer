@@ -5,7 +5,7 @@
   "homepage": "https://www.yidroid.cn",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --no-sandbox --disable-gpu",
     "build": "electron-builder",
     "build-win": "electron-builder --win",
     "build-linux": "electron-builder --linux",
@@ -18,20 +18,17 @@
     "analyzer",
     "electron"
   ],
-  "author": {
-    "name": "YiDroid",
-    "email": "673381110@qq.com"
-  },
+  "author": "YiDroid <673381110@qq.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^27.0.0",
-    "electron-builder": "^24.6.4"
+    "electron": "^27.3.11",
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
-    "adm-zip": "^0.5.10",
+    "adm-zip": "^0.5.16",
     "line-reader": "^0.4.0",
     "node-stream-zip": "^1.15.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "build": {
     "appId": "com.yidroid.bugreport-analyzer",

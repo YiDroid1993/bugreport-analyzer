@@ -1,52 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BugReport Analyzer</title>
     <link rel="stylesheet" href="assets/styles/main.css">
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>BugReport Analyzer</h1>
             <div class="actions">
-                <button id="open-project-btn">Open Project</button>
-                <button id="new-project-btn">New Project</button>
+                    <button id="new-project-btn">新建项目</button>
+                    <button id="open-project-btn">打开项目</button>
             </div>
         </header>
 
         <main>
             <div class="project-list" id="project-list">
-                <h2>Recent Projects</h2>
+                <h2>最近项目</h2>
                 <ul id="recent-projects"></ul>
             </div>
 
+            <!-- 项目视图部分 -->
             <div class="project-view hidden" id="project-view">
                 <div class="project-header">
-                    <h2 id="project-name"></h2>
-                    <button id="back-to-list">Back to Projects</button>
+                    <h2 id="project-name">项目名称</h2>
+                    <div class="project-path" id="project-path"></div>
+                    <button id="back-to-list">返回项目列表</button>
                 </div>
 
                 <div class="project-content">
+                    <!-- 文件上传区域 -->
+                    <div class="upload-section">
+                        <h3>上传文件</h3>
+                        <button id="upload-btn">选择文件</button>
+                        <div id="upload-status" class="status-info"></div>
+                        <div id="process-status" class="status-info"></div>
+                    </div>
+
+                    <!-- 已上传文件列表 -->
                     <div class="files-section">
-                        <h3>BugReport Files</h3>
+                        <h3>已上传文件</h3>
+                        <ul id="uploaded-files-list"></ul>
+                    </div>
+
+                    <!-- BugReport文件 -->
+                    <div class="files-section">
+                        <h3>BugReport文件</h3>
                         <div class="chunk-list" id="chunk-list"></div>
                     </div>
 
+                    <!-- 文本查看器 -->
                     <div class="text-viewer">
                         <div class="text-controls">
-                            <input type="text" id="search-input" placeholder="Search...">
-                            <button id="search-btn">Search</button>
+                            <input type="text" id="search-input" placeholder="搜索...">
+                            <button id="search-btn">搜索</button>
                             <label>
-                                <input type="checkbox" id="use-regex"> Use Regex
+                                <input type="checkbox" id="use-regex"> 使用正则表达式
                             </label>
                         </div>
                         <div class="text-content" id="text-content"></div>
                     </div>
 
+                    <!-- 视频文件 -->
                     <div class="video-section">
-                        <h3>Video Files</h3>
+                        <h3>视频文件</h3>
                         <div class="video-list" id="video-list"></div>
                     </div>
                 </div>
@@ -56,4 +77,5 @@
 
     <script src="src/renderer/renderer.js"></script>
 </body>
+
 </html>
