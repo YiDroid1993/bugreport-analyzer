@@ -140,19 +140,19 @@ ipcMain.handle('get-project-info', async (event, projectPath) => {
             console.error('Invalid project path:', projectPath);
             return { success: false, error: 'Invalid project path', project: null };
         }
-      
-        const projectInfoPath = path.join(projectPath, 'project.json');
-      
+
+        const projectInfoPath = path.join(projectPath, 'projects.json');
+
         // 检查文件是否存在
         if (!fs.existsSync(projectInfoPath)) {
             console.error('Project info file does not exist:', projectInfoPath);
             return { success: false, error: 'Project info file not found', project: null };
         }
-      
+
         // 读取并解析项目信息
         const data = fs.readFileSync(projectInfoPath, 'utf8');
         const projectInfo = JSON.parse(data);
-      
+
         return { success: true, project: projectInfo };
     } catch (error) {
         console.error('Error reading project info:', error);
@@ -163,7 +163,7 @@ ipcMain.handle('get-project-info', async (event, projectPath) => {
 // 保存项目信息
 ipcMain.handle('save-project-info', async (event, projectPath, projectInfo) => {
     try {
-        const projectInfoPath = path.join(projectPath, 'project.json');
+        const projectInfoPath = path.join(projectPath, 'projects.json');
         fs.writeFileSync(projectInfoPath, JSON.stringify(projectInfo, null, 2));
         return true;
     } catch (error) {

@@ -17,7 +17,7 @@ class FileProcessor {
         const projectId = uuidv4();
         const projectName = path.basename(filePath, '.zip');
         const projectDir = path.join(process.cwd(), 'cache', projectId);
-      
+
         if (!fs.existsSync(projectDir)) {
             fs.mkdirSync(projectDir, { recursive: true });
         }
@@ -43,50 +43,61 @@ class FileProcessor {
         // 查找MP4文件
         const mp4Files = this.findMp4Files(projectDir);
 
-        return {
+        // 创建项目数据
+        const projectData = {
             id: projectId,
             name: projectName,
             originalPath: filePath,
             cacheDir: projectDir,
             bugreportFiles: processedFiles,
             mp4Files: mp4Files,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         };
+
+        // 保存项目信息到项目目录
+        const projectInfoPath = path.join(projectDir, 'project.json');
+        fs.writeFileSync(projectInfoPath, JSON.stringify(projectData, null, 2));
+
+        // 保存项目到缓存管理器
+        await this.cacheManager.saveProject(projectData);
+
+        return projectData;
     }
 
     async extractZip(zipPath, targetDir) {
         return new Promise((resolve, reject) => {
-          const zip = new StreamZip.async({ file: zipPath });
-          
-          zip.extract(null, targetDir)
-              .then(() => {
-                  zip.close();
-                  resolve();
-              })
-              .catch(err => {
-                  reject(err);
-              });
+            const zip = new StreamZip.async({ file: zipPath });
+
+            zip.extract(null, targetDir)
+                .then(() => {
+                    zip.close();
+                    resolve();
+                })
+                .catch(err => {
+                    reject(err);
+                });
         });
     }
 
     async processNestedZips(dir) {
         const files = fs.readdirSync(dir);
-        
+
         for (const file of files) {
             const fullPath = path.join(dir, file);
             const stat = fs.statSync(fullPath);
-            
+
             if (stat.isDirectory()) {
                 await this.processNestedZips(fullPath);
             } else if (path.extname(file).toLowerCase() === '.zip') {
                 const nestedDir = path.join(dir, path.basename(file, '.zip'));
                 if (!fs.existsSync(nestedDir)) {
-                  fs.mkdirSync(nestedDir, { recursive: true });
+                    fs.mkdirSync(nestedDir, { recursive: true });
                 }
-                
+
                 await this.extractZip(fullPath, nestedDir);
                 fs.unlinkSync(fullPath); // 删除嵌套ZIP文件
-                
+
                 // 处理新解压的文件中的嵌套ZIP
                 await this.processNestedZips(nestedDir);
             }
@@ -107,11 +118,11 @@ class FileProcessor {
 
     _findFilesByPattern(dir, pattern, results) {
         const files = fs.readdirSync(dir);
-        
+
         for (const file of files) {
             const fullPath = path.join(dir, file);
             const stat = fs.statSync(fullPath);
-            
+
             if (stat.isDirectory()) {
                 this._findFilesByPattern(fullPath, pattern, results);
             } else if (pattern.test(file)) {

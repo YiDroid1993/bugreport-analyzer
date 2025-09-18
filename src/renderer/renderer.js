@@ -38,27 +38,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadRecentProjects() {
         try {
-            console.log('Loading recent projects...');
-
-            if (!window.electronAPI || !window.electronAPI.listProjects) {
-                console.error('electronAPI.listProjects is not available');
-                displayRecentProjects([]);
-                return;
-            }
-
             const result = await window.electronAPI.listProjects();
-            console.log('Recent projects result:', result);
 
             if (result && result.success) {
                 const projects = Array.isArray(result.projects) ? result.projects : [];
-                displayRecentProjects(projects);
+
+                // 同时显示来自主进程的项目和本地存储的最近项目
+                const localRecentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
+
+                // 合并项目列表，去除重复项
+                const mergedProjects = [...localRecentProjects];
+
+                projects.forEach(project => {
+                    if (!mergedProjects.some(p => p.id === project.id)) {
+                        mergedProjects.push({
+                            id: project.id,
+                            name: project.name,
+                            path: project.cacheDir,
+                            lastOpened: project.createdAt
+                        });
+                    }
+                });
+
+                displayRecentProjects(mergedProjects);
             } else {
                 console.error('Failed to load projects:', result ? result.error : 'Unknown error');
-                displayRecentProjects([]);
+
+                // 回退到只显示本地存储的项目
+                const localRecentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
+                displayRecentProjects(localRecentProjects);
             }
         } catch (error) {
             console.error('Error loading recent projects:', error);
-            displayRecentProjects([]);
+
+            // 回退到只显示本地存储的项目
+            const localRecentProjects = JSON.parse(localStorage.getItem('recentProjects') || '[]');
+            displayRecentProjects(localRecentProjects);
         }
     }
 
@@ -80,18 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleNewProject() {
         try {
-            console.log('Handling new project...');
-
-            if (!window.electronAPI || !window.electronAPI.selectZipFile) {
-                throw new Error('应用程序接口不可用');
-            }
-
             const filePath = await window.electronAPI.selectZipFile();
             if (filePath) {
                 const result = await window.electronAPI.processZipFile(filePath);
                 if (result && result.success) {
-                    openProject(result.project.id);
-                    loadRecentProjects();
+                    // 添加到最近项目列表
+                    await addToRecentProjects(result.project.cacheDir, result.project);
+
+                    // 加载项目
+                    await loadProject(result.project.cacheDir, result);
+
+                    // 重新加载最近项目列表
+                    await loadRecentProjects();
                 } else {
                     alert('处理文件错误: ' + (result ? result.error : '未知错误'));
                 }
@@ -257,7 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 添加新项目到列表开头
             recentProjects.unshift({
-                name: projectInfo.name,
+                id: projectInfo.id || Date.now().toString(),
+                name: projectInfo.name || '未命名项目',
                 path: projectPath,
                 lastOpened: new Date().toISOString()
             });
