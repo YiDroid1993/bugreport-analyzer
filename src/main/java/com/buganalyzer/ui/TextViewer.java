@@ -6,6 +6,7 @@ import com.buganalyzer.model.FileMetadata;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -91,6 +92,8 @@ public class TextViewer extends BorderPane {
 
         // Center: ListView (Virtualized)
         listView = new ListView<>();
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
         listView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -101,11 +104,99 @@ public class TextViewer extends BorderPane {
                 } else {
                     setText(item);
                     setFont(Font.font("Monospaced", 12));
-                    // Optional: Add simple wrapping if needed, but usually logs are better without wrapping or with horizontal scroll
-                    // setWrapText(true); 
+                    setTextFill(Color.BLACK);
+                }
+            }
+            
+            {
+                // Drag Selection Logic
+                setOnMousePressed(event -> {
+                    if (event.isPrimaryButtonDown()) {
+                        isDragging = true;
+                        dragAnchorIndex = getIndex();
+                        if (!event.isControlDown() && !event.isShiftDown()) {
+                            listView.getSelectionModel().clearAndSelect(dragAnchorIndex);
+                        }
+                    }
+                });
+
+                setOnDragDetected(event -> {
+                    if (event.isPrimaryButtonDown()) {
+                        startFullDrag();
+                    }
+                });
+
+                setOnMouseDragEntered(event -> {
+                    if (event.isPrimaryButtonDown() && dragAnchorIndex >= 0) {
+                        int currentIndex = getIndex();
+                        if (currentIndex >= 0) {
+                            if (!event.isControlDown()) {
+                                listView.getSelectionModel().clearSelection();
+                            }
+                            int start = Math.min(dragAnchorIndex, currentIndex);
+                            int end = Math.max(dragAnchorIndex, currentIndex);
+                            listView.getSelectionModel().selectRange(start, end + 1);
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Context Menu
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem copyItem = new MenuItem("复制");
+        copyItem.setOnAction(e -> copySelection());
+        MenuItem selectAllItem = new MenuItem("全选");
+        selectAllItem.setOnAction(e -> listView.getSelectionModel().selectAll());
+        
+        MenuItem askAiItem = new MenuItem("咨询 AI");
+        askAiItem.setOnAction(e -> openAIConsultation());
+        
+        contextMenu.getItems().addAll(copyItem, selectAllItem, new SeparatorMenuItem(), askAiItem);
+        listView.setContextMenu(contextMenu);
+
+        // Key Events (Ctrl+C, Ctrl+A)
+        listView.setOnKeyPressed(event -> {
+            if (event.isControlDown()) {
+                if (event.getCode() == KeyCode.C) {
+                    copySelection();
+                } else if (event.getCode() == KeyCode.A) {
+                    listView.getSelectionModel().selectAll();
                 }
             }
         });
+        
+        // Scroll Wheel Support during Drag
+        listView.addEventFilter(ScrollEvent.SCROLL, event -> {
+            if (isDragging) {
+                // Robustly find vertical scrollbar
+                ScrollBar sb = null;
+                for (javafx.scene.Node n : listView.lookupAll(".scroll-bar")) {
+                    if (n instanceof ScrollBar && ((ScrollBar) n).getOrientation() == javafx.geometry.Orientation.VERTICAL) {
+                        sb = (ScrollBar) n;
+                        break;
+                    }
+                }
+                
+                if (sb != null) {
+                    double deltaY = event.getDeltaY();
+                    if (deltaY > 0) {
+                        sb.decrement();
+                    } else {
+                        sb.increment();
+                    }
+                    
+                    boolean isCtrl = event.isControlDown();
+                    // Update selection after layout update
+                    Platform.runLater(() -> updateSelectionFromMouse(event.getSceneX(), event.getSceneY(), isCtrl));
+                    event.consume();
+                }
+            }
+        });
+        
+        // Reset dragging state on release globally
+        listView.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> isDragging = false);
+
         setCenter(listView);
 
         // Bottom: Status
@@ -116,6 +207,10 @@ public class TextViewer extends BorderPane {
         // Load initial content (first part or full file)
         loadContent(null);
     }
+    
+    // Drag selection state
+    private int dragAnchorIndex = -1;
+    private boolean isDragging = false;
 
     public void loadContent(String partName) {
         statusLabel.setText("加载中...");
@@ -200,5 +295,55 @@ public class TextViewer extends BorderPane {
         // For now, we rely on SearchWindow.
         // To implement highlighting here, we would need to update the CellFactory to parse the text and use a TextFlow.
         listView.refresh(); // Trigger cell update
+    }
+    
+    private void updateSelectionFromMouse(double sceneX, double sceneY, boolean isControlDown) {
+        if (dragAnchorIndex < 0) return;
+        
+        for (javafx.scene.Node node : listView.lookupAll(".list-cell")) {
+            if (node instanceof ListCell) {
+                ListCell<?> cell = (ListCell<?>) node;
+                if (cell.isVisible()) {
+                    javafx.geometry.Bounds bounds = cell.localToScene(cell.getBoundsInLocal());
+                    if (bounds.contains(sceneX, sceneY)) {
+                        int index = cell.getIndex();
+                        if (index >= 0) {
+                            if (!isControlDown) {
+                                listView.getSelectionModel().clearSelection();
+                            }
+                            int start = Math.min(dragAnchorIndex, index);
+                            int end = Math.max(dragAnchorIndex, index);
+                            listView.getSelectionModel().selectRange(start, end + 1);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void copySelection() {
+        List<String> selected = listView.getSelectionModel().getSelectedItems();
+        if (selected != null && !selected.isEmpty()) {
+            String content = String.join("\n", selected);
+            ClipboardContent clipboardContent = new ClipboardContent();
+            clipboardContent.putString(content);
+            Clipboard.getSystemClipboard().setContent(clipboardContent);
+        }
+    }
+
+    private void openAIConsultation() {
+        List<String> selected = listView.getSelectionModel().getSelectedItems();
+        String contextText;
+        if (selected != null && !selected.isEmpty()) {
+            contextText = String.join("\n", selected);
+        } else {
+            // If no selection, use all text (be careful with large files)
+            // For safety, maybe limit to first 100 lines or show warning?
+            // Let's use all text but user can edit it in the dialog.
+            contextText = String.join("\n", listView.getItems());
+        }
+        
+        new AIConsultationView(contextText).show();
     }
 }

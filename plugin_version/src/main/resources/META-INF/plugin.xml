@@ -1,0 +1,22 @@
+<idea-plugin>
+    <id>com.buganalyzer.plugin</id>
+    <name>Bug Analyzer</name>
+    <vendor email="support@buganalyzer.com" url="https://www.buganalyzer.com">Bug Analyzer Team</vendor>
+
+    <description><![CDATA[
+    Analyze Android bug reports directly in Android Studio.
+    <ul>
+        <li>View large log files with high performance</li>
+        <li>Search with regex and categories</li>
+        <li>Consult AI for log analysis</li>
+    </ul>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Bug Analyzer" secondary="true" icon="AllIcons.General.Modified" anchor="right"
+                    factoryClass="com.buganalyzer.plugin.ui.BugAnalyzerToolWindowFactory"/>
+    </extensions>
+</idea-plugin>
