@@ -16,7 +16,7 @@ set APP_VERSION=1.0
 set INPUT_DIR=target
 set MAIN_JAR=BugAnalyzer-1.0-SNAPSHOT.jar
 set MAIN_CLASS=com.buganalyzer.Launcher
-set ICON_PATH=icon.png
+set ICON_PATH=icon.ico
 
 REM Create EXE package
 echo Creating EXE package...
