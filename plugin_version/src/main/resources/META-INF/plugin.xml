@@ -5,6 +5,10 @@
 
     <description><![CDATA[
     Analyze Android bug reports directly in Android Studio.
+     <p><strong>Android Bug Analyzer</strong> is an Android Studio plugin built to solve
+            performance bottlenecks and tooling fragmentation when analyzing large Bug Report log files. It offers a
+            unified analysis experience via a custom high-performance file reading algorithm and integrated search
+            tools.</p>
     <ul>
         <li>View large log files with high performance</li>
         <li>Search with regex and categories</li>
@@ -17,6 +21,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Android Bug Analyzer" secondary="true" icon="AllIcons.General.Modified" anchor="right"
-                    factoryClass="com.yidroid.buganalyzer.plugin.ui.BugAnalyzerToolWindowFactory"/>
+            factoryClass="com.yidroid.buganalyzer.plugin.ui.BugAnalyzerToolWindowFactory"/>
     </extensions>
 </idea-plugin>
