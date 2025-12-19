@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>com.buganalyzer.plugin</id>
-    <name>Bug Analyzer</name>
-    <vendor email="support@buganalyzer.com" url="https://www.buganalyzer.com">Bug Analyzer Team</vendor>
+    <id>com.yidroid.buganalyzer.plugin</id>
+    <name>Android Bug Analyzer</name>
+    <vendor email="jayjackson1993@gmail.com">YiDroid</vendor>
 
     <description><![CDATA[
     Analyze Android bug reports directly in Android Studio.
@@ -16,7 +16,7 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Bug Analyzer" secondary="true" icon="AllIcons.General.Modified" anchor="right"
-                    factoryClass="com.buganalyzer.plugin.ui.BugAnalyzerToolWindowFactory"/>
+        <toolWindow id="Android Bug Analyzer" secondary="true" icon="AllIcons.General.Modified" anchor="right"
+                    factoryClass="com.yidroid.buganalyzer.plugin.ui.BugAnalyzerToolWindowFactory"/>
     </extensions>
 </idea-plugin>

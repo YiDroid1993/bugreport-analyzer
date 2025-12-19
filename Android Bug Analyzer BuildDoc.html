@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Bug Analyzer - Technical Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2980b9;
+        }
+
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #c0392b;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        .class-header {
+            background-color: #e8f6f3;
+            padding: 10px;
+            border-left: 5px solid #1abc9c;
+            margin-top: 30px;
+            font-weight: bold;
+            font-family: 'Consolas', monospace;
+        }
+
+        .algo-step {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .lang-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #2980b9;
+        }
+
+        .en-content {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        function toggleLanguage() {
+            const zh = document.querySelectorAll('.zh-content');
+            const en = document.querySelectorAll('.en-content');
+            const btn = document.getElementById('langBtn');
+            const isEn = btn.innerText === 'Switch to Chinese';
+
+            if (isEn) {
+                zh.forEach(el => el.style.display = 'block');
+                en.forEach(el => el.style.display = 'none');
+                btn.innerText = 'Switch to English';
+            } else {
+                zh.forEach(el => el.style.display = 'none');
+                en.forEach(el => el.style.display = 'block');
+                btn.innerText = 'Switch to Chinese';
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="lang-switch">
+        <button id="langBtn" class="lang-btn" onclick="toggleLanguage()">Switch to English</button>
+    </div>
+
+    <!-- HEADER -->
+    <h1 class="zh-content">Android Bug Analyzer 技术参考文档</h1>
+    <h1 class="en-content">Android Bug Analyzer Technical Reference</h1>
+
+    <p class="zh-content" style="text-align: center;">版本: 1.0 | 平台: IntelliJ Platform</p>
+    <p class="en-content" style="text-align: center;">Version: 1.0 | Platform: IntelliJ Platform</p>
+
+    <!-- 1. Overview -->
+    <div class="section">
+        <h2 class="zh-content">1. 项目概述</h2>
+        <h2 class="en-content">1. Project Overview</h2>
+
+        <p class="zh-content"><strong>Android Bug Analyzer</strong> 是一款专为 Android Studio 开发的插件，旨在解决移动开发者在分析大型 Bug Report
+            日志文件时遇到的性能和工具碎片化问题。它通过自定义的高性能文件读取算法和集成化的搜索工具，提供了一站式的日志分析体验。</p>
+        <p class="en-content"><strong>Android Bug Analyzer</strong> is an Android Studio plugin built to solve
+            performance bottlenecks and tooling fragmentation when analyzing large Bug Report log files. It offers a
+            unified analysis experience via a custom high-performance file reading algorithm and integrated search
+            tools.</p>
+    </div>
+
+    <!-- 2. Package Structure -->
+    <div class="section">
+        <h2 class="zh-content">2. 代码结构与实现细节</h2>
+        <h2 class="en-content">2. Code Structure & Implementation Details</h2>
+
+        <p class="zh-content">项目源码位于 <code>com.yidroid.buganalyzer</code> 包下，按功能模块划分为 <code>core</code> (核心逻辑),
+            <code>model</code> (数据模型), 和 <code>plugin.ui</code> (界面交互)。</p>
+        <p class="en-content">Source code is located under <code>com.yidroid.buganalyzer</code>, divided into
+            <code>core</code> (Logic), <code>model</code> (Data), and <code>plugin.ui</code> (UI Interaction).</p>
+
+        <!-- CORE -->
+        <h3 style="color: #d35400;">Package: <code>com.yidroid.buganalyzer.core</code></h3>
+
+        <div>
+            <div class="class-header">SearchEngine.java</div>
+            <p class="zh-content"><strong>用途：</strong> 提供高性能、低内存占用的文件搜索服务。</p>
+            <p class="en-content"><strong>Purpose:</strong> Provides high-performance, low-memory file searching
+                services.</p>
+
+            <p class="zh-content"><strong>核心算法 (searchFile):</strong></p>
+            <p class="en-content"><strong>Core Algorithm (searchFile):</strong></p>
+            <ul class="algo-step zh-content">
+                <li><strong>流式读取：</strong> 使用 <code>BufferedReader</code> 逐行读取文件，避免将整个文件加载到 RAM 中，从而支持只有几百 MB 内存分配的 IDE
+                    处理 GB 级日志。</li>
+                <li><strong>正则编译优化：</strong> 如果启用了正则搜索，<code>Pattern</code> 对象在循环外预编译一次，避免重复编译开销。</li>
+                <li><strong>双重过滤逻辑：</strong>
+                    <ul>
+                        <li><strong>查询 (Query)：</strong> 首先检查行是否包含 Search Text 或匹配 Regex 模式。</li>
+                        <li><strong>关键字 (Keywords)：</strong> 接着应用关键字过滤器。算法根据 <code>matchAllKeywords</code> 标志动态切换逻辑：
+                            <br><code>true</code> (AND): 遍历所有关键字，如果行<strong>缺少任意一个</strong>关键字，则丢弃。
+                            <br><code>false</code> (OR): 遍历所有关键字，如果行<strong>包含任意一个</strong>关键字，则保留并终止检查。
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="class-header">KeywordManager.java</div>
+            <p class="zh-content"><strong>用途：</strong> 管理用户定义的关键字配置及持久化。</p>
+            <p class="en-content"><strong>Purpose:</strong> Manages configuration and persistence of user-defined
+                keywords.</p>
+            <p class="zh-content"><strong>实现逻辑：</strong> 使用 Jackson 库将关键字及其分类存储为 JSON 格式
+                (<code>keywords.json</code>)。提供了增删改查 API，并负责处理旧版本 TXT 配置文件的迁移。数据结构为
+                <code>Map&lt;String, List&lt;String&gt;&gt;</code> 实现分类管理。</p>
+            <p class="en-content"><strong>Logic:</strong> Uses Jackson to serialize keywords/categories to JSON
+                (<code>keywords.json</code>). Provides CRUD APIs and handles legacy TXT migration. Data is structured as
+                <code>Map&lt;String, List&lt;String&gt;&gt;</code>.</p>
+        </div>
+
+        <!-- MODEL -->
+        <h3 style="color: #d35400; margin-top: 40px;">Package: <code>com.yidroid.buganalyzer.model</code></h3>
+
+        <div>
+            <div class="class-header">ProjectManifest.java</div>
+            <p class="zh-content"><strong>用途：</strong> 定义“分析项目”的元数据结构。</p>
+            <p class="en-content"><strong>Purpose:</strong> Defines the metadata structure for an "Analysis Project".
+            </p>
+            <p class="zh-content"><strong>字段：</strong> 包含 <code>projectName</code> (项目名), <code>originalZipPath</code>
+                (原始 Zip 路径), <code>createdDate</code> (创建时间), 以及 <code>files</code> (文件列表)。它是项目状态持久化的核心对象。</p>
+        </div>
+
+        <div>
+            <div class="class-header">FileMetadata.java</div>
+            <p class="zh-content"><strong>用途：</strong> 描述单个被分析文件的属性。</p>
+            <p class="en-content"><strong>Purpose:</strong> Describes attributes of a single analyzed file.</p>
+            <p class="zh-content"><strong>逻辑：</strong> 除了基础的文件名和路径，核心字段 <code>splitParts</code>
+                是一个字符串列表。当日志文件过大时，工具会自动将其拆分，此字段记录拆分后的子文件名序列，以便 UI 层能够将被拆分的文件呈现为一个逻辑整体。</p>
+            <p class="en-content"><strong>Logic:</strong> Key field <code>splitParts</code> (List&lt;String&gt;) tracks
+                split segments of large files, allowing the UI to present them as a single logical entity despite
+                physical segmentation.</p>
+        </div>
+
+        <!-- UI -->
+        <h3 style="color: #d35400; margin-top: 40px;">Package: <code>com.yidroid.buganalyzer.plugin.ui</code></h3>
+
+        <div>
+            <div class="class-header">MainPanel.java</div>
+            <p class="zh-content"><strong>用途：</strong> 插件的根 UI 容器。</p>
+            <p class="en-content"><strong>Purpose:</strong> Root UI container for the plugin.</p>
+            <p class="zh-content"><strong>逻辑：</strong> 使用 <code>CardLayout</code> 布局管理器。根据用户状态在 `WELCOME` (欢迎页/最近项目) 和
+                `PROJECT` (项目详情/日志查看) 两个视图之间无缝切换。负责持有全局的 <code>Project</code> 上下文引用。</p>
+        </div>
+
+        <div>
+            <div class="class-header">TextPanel.java</div>
+            <p class="zh-content"><strong>用途：</strong> 核心日志阅读器，实现高性能分页显示。</p>
+            <p class="en-content"><strong>Purpose:</strong> Core log viewer implementing high-performance pagination.
+            </p>
+            <p class="zh-content"><strong>核心算法 (Pagination & Rendering):</strong></p>
+            <p class="en-content"><strong>Core Algorithms:</strong></p>
+            <ul class="algo-step zh-content">
+                <li><strong>分页加载 (loadFile/loadPage):</strong> 利用 Java NIO 的 <code>Files.lines()</code> 流。通过
+                    <code>stream.skip(offset).limit(limit)</code> 方法只读取当前页所需的行数。这避免了加载整个文件，瞬间响应翻页操作。默认页大小为 2000 行。</li>
+                <li><strong>自定义渲染 (HighlightRenderer):</strong> 扩展 <code>JTextArea</code> 实现
+                    <code>ListCellRenderer</code>。在 <code>getListCellRendererComponent</code> 中，根据当前行的索引检查是否在
+                    <code>searchResults</code> 列表中，如果是，则设置背景色为高亮黄，实现搜索结果的视觉反馈。</li>
+                <li><strong>原地编辑 (In-Place Editor):</strong> Swing 的 JList 不支持直接文本选择。本类通过计算单元格的屏幕坐标
+                    (<code>getCellBounds</code>)，在 JLayeredPane 的顶层动态叠加一个透明的 <code>JTextArea</code>，模拟出“双击选中复制”的交互效果。
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="class-header">SearchResultDialog.java</div>
+            <p class="zh-content"><strong>用途：</strong> 执行全局搜索并展示聚合结果。</p>
+            <p class="en-content"><strong>Purpose:</strong> Executes global search and displays aggregated results.</p>
+            <p class="zh-content"><strong>技术细节：</strong></p>
+            <ul class="algo-step zh-content">
+                <li><strong>多线程架构：</strong> 搜索任务在独立的 <code>Thread</code> 中运行。该线程周期性检查 <code>isCancelled</code> 标志或
+                    <code>Thread.interrupted()</code> 状态，确保用户关闭对话框时搜索能立即停止，防止后台资源泄露。</li>
+                <li><strong>参数传递：</strong> 将过滤面板中选定的 <code>keywords</code> 列表和 <code>matchAll</code> (AND/OR) 状态直接传递给
+                    <code>SearchEngine</code>，实现界面与逻辑的解耦。</li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="class-header">KeywordFilterPopup.java</div>
+            <p class="zh-content"><strong>用途：</strong> 悬浮式关键字过滤配置面板。</p>
+            <p class="en-content"><strong>Purpose:</strong> Floating panel for keyword filter configuration.</p>
+            <p class="zh-content"><strong>逻辑：</strong> 动态生成复选框列表。包含一个关键的 "Match All (AND)" 复选框，该控件的状态直接决定了全工程搜索的逻辑过滤模式。
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. Environment -->
+    <div class="section">
+        <h2 class="zh-content">3. 构建与运行环境</h2>
+        <h2 class="en-content">3. Build & Runtime Environment</h2>
+
+        <table class="param-table">
+            <tr>
+                <th>Param</th>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Language</td>
+                <td>Java 17</td>
+                <td>Required by IntelliJ Platform 2023.2+</td>
+            </tr>
+            <tr>
+                <td>Build Tool</td>
+                <td>Gradle 8.0+</td>
+                <td>Manages dependencies and plugin packaging</td>
+            </tr>
+            <tr>
+                <td>Framework</td>
+                <td>IntelliJ Platform SDK</td>
+                <td>Target Version: 2023.2.5 (Android Studio Iguana/Jellyfish Base)</td>
+            </tr>
+        </table>
+    </div>
+
+    <footer style="text-align: center; color: #7f8c8d; margin-top: 50px; font-size: 0.9em;">
+        Generated by Android Bug Analyzer Team &bull; 2025
+    </footer>
+
+</body>
+
+</html>

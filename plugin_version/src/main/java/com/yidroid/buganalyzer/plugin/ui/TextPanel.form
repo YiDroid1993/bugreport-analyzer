@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.yidroid.buganalyzer.plugin.ui.TextPanel">
+  <grid id="27dc6" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="800" height="600"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="searchPanel" layout-manager="BorderLayout" hgap="5" vgap="0">
+        <margin top="5" left="5" bottom="5" right="5"/>
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="leftSearch" layout-manager="FlowLayout" hgap="5" vgap="0" flow-align="0">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints border-constraint="West"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="searchLabel" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <text value="Search:"/>
+                </properties>
+              </component>
+              <grid id="searchFieldPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties/>
+                <border type="line"/>
+                <children>
+                   <component id="searchField" class="com.intellij.ui.components.JBTextField" binding="searchField">
+                      <constraints border-constraint="Center"/>
+                      <properties>
+                        <columns value="20"/>
+                        <text value=""/>
+                      </properties>
+                   </component>
+                   <component id="filterTrigger" class="javax.swing.JButton" binding="filterTrigger">
+                      <constraints border-constraint="East"/>
+                      <properties>
+                        <text value="▼"/>
+                        <toolTipText value="Filter by Keywords"/>
+                        <preferredSize width="20" height="24"/>
+                        <contentAreaFilled value="false"/>
+                        <borderPainted value="false"/>
+                      </properties>
+                   </component>
+                </children>
+              </grid>
+              <component id="regexCheckBox" class="javax.swing.JCheckBox" binding="regexCheckBox">
+                <constraints/>
+                <properties>
+                  <text value="Regex"/>
+                </properties>
+              </component>
+              <component id="searchAllButton" class="javax.swing.JButton" binding="searchAllButton">
+                <constraints/>
+                <properties>
+                  <text value="Search All"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="rightSearch" layout-manager="FlowLayout" hgap="5" vgap="0" flow-align="2">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints border-constraint="East"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+               <grid id="filterStatusPanel" binding="filterStatusPanel" layout-manager="FlowLayout" hgap="5" vgap="0" flow-align="0">
+                  <margin top="0" left="0" bottom="0" right="0"/>
+                  <constraints/>
+                  <properties>
+                     <visible value="false"/>
+                  </properties>
+                  <border type="none"/>
+                  <children>
+                     <component id="filterStatusLabel" class="javax.swing.JLabel" binding="filterStatusLabel">
+                        <constraints/>
+                        <properties>
+                           <foreground color="-16776961"/>
+                        </properties>
+                     </component>
+                     <component id="clearFilterBtn" class="javax.swing.JButton" binding="clearFilterBtn">
+                        <constraints/>
+                        <properties>
+                           <text value="x"/>
+                           <preferredSize width="20" height="20"/>
+                           <borderPainted value="false"/>
+                        </properties>
+                     </component>
+                  </children>
+               </grid>
+              <component id="prevPageBtn" class="javax.swing.JButton" binding="prevPageBtn">
+                <constraints/>
+                <properties>
+                  <text value="&lt;"/>
+                  <preferredSize width="30" height="24"/>
+                </properties>
+              </component>
+              <component id="pageLabel" class="javax.swing.JLabel" binding="pageLabel">
+                <constraints/>
+                <properties>
+                  <text value="0/0"/>
+                  <horizontalAlignment value="0"/>
+                  <preferredSize width="60" height="24"/>
+                </properties>
+              </component>
+              <component id="nextPageBtn" class="javax.swing.JButton" binding="nextPageBtn">
+                <constraints/>
+                <properties>
+                  <text value="&gt;"/>
+                  <preferredSize width="30" height="24"/>
+                </properties>
+              </component>
+              <hspacer id="spacer1">
+                <constraints/>
+              </hspacer>
+              <component id="prevButton" class="javax.swing.JButton" binding="prevButton">
+                <constraints/>
+                <properties>
+                  <text value="Prev"/>
+                </properties>
+              </component>
+              <component id="nextButton" class="javax.swing.JButton" binding="nextButton">
+                <constraints/>
+                <properties>
+                  <text value="Next"/>
+                </properties>
+              </component>
+              <component id="keywordsButton" class="javax.swing.JButton" binding="keywordsButton">
+                <constraints/>
+                <properties>
+                    <text value="Manage Keywords"/>
+                </properties>
+              </component>
+              <component id="statusLabel" class="javax.swing.JLabel" binding="statusLabel">
+                  <constraints/>
+                  <properties>
+                      <border type="none"/>
+                  </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="layeredPaneContainer" binding="layeredPaneContainer" layout-manager="BorderLayout" hgap="0" vgap="0">
+         <margin top="0" left="0" bottom="0" right="0"/>
+         <constraints border-constraint="Center"/>
+         <properties/>
+         <border type="none"/>
+         <children/>
+      </grid>
+    </children>
+  </grid>
+</form>
