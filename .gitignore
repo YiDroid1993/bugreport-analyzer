@@ -43,7 +43,6 @@ plugin_version/.idea/migrations.xml
 plugin_version/.idea/misc.xml
 plugin_version/.idea/plugin_version.iml
 plugin_version/.idea/runConfigurations.xml
-plugin_version/build.gradle.kts
 plugin_version/build/classes/java/main/com/buganalyzer/core/AISiteManager$1.class
 plugin_version/build/classes/java/main/com/buganalyzer/core/AISiteManager$AISite.class
 plugin_version/build/classes/java/main/com/buganalyzer/core/AISiteManager.class
@@ -1264,3 +1263,4 @@ target/maven-archiver/pom.properties
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 target/original-BugAnalyzer-1.0-SNAPSHOT.jar
+plugin_version/.idea
